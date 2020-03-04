@@ -1,0 +1,82 @@
+Microsoft (R) Macro Assembler Version 5.10                  2/7/18 18:54:28
+
+                                                             Page     1-1
+
+
+       1 0000				StkSeg  SEGMENT PARA STACK 'STACK'
+       2 0000  0200[			        DB      200h DUP (?)
+       3	   ??			
+       4			 ]	
+       5				
+       6 0200				StkSeg  ENDS
+       7				;
+       8 0000				DataS   SEGMENT WORD 'DATA'
+       9 0000  0D			HelloMessage    DB   13                
+					;курсор поместить в нач. строки
+      10 0001  0A			                DB   10                
+					;перевести курсор на нов. строку
+      11 0002  48 65 6C 6C 6F 2C	                DB   'Hello, world !'  
+					;текст сообщения
+      12       20 77 6F 72 6C 64	
+      13       20 21			
+      14 0010  24			                DB   '$'               
+					;ограничитель для функции DOS
+      15 0011				DataS   ENDS
+      16				;
+      17 0000				Code    SEGMENT WORD 'CODE'
+      18				        ASSUME  CS:Code, DS:DataS
+      19 0000				DispMsg:
+      20 0000  B8 ---- R		        mov   AX,DataS                 
+					;загрузка в AX адреса сегмента данных
+      21 0003  8E D8			        mov   DS,AX                    
+					;установка DS
+      22 0005  BA 0000 R		        mov   DX,OFFSET HelloMessage   
+					;DS:DX - адрес строки
+      23 0008  B4 09			        mov   AH,9                     
+					;АН=09h выдать на дисплей строку
+      24 000A  CD 21			        int   21h                      
+					;вызов  функции DOS
+      25 000C  B4 07			        mov   AH,7                     
+					;АН=07h ввести символ без эха
+      26 000E  CD 21			        INT   21h                      
+					;вызов  функции DOS
+      27 0010  B4 4C			        mov   AH,4Ch                   
+					;АН=4Ch завершить процесс
+      28 0012  CD 21			        int   21h                      
+					;вызов  функции DOS
+      29 0014				Code    ENDS
+      30				        END   DispMsg
+Microsoft (R) Macro Assembler Version 5.10                  2/7/18 18:54:28
+
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0014	WORD	NONE	'CODE'
+DATAS  . . . . . . . . . . . . .  	0011	WORD	NONE	'DATA'
+STKSEG . . . . . . . . . . . . .  	0200	PARA	STACK	'STACK'
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+DISPMSG  . . . . . . . . . . . .  	L NEAR	0000	CODE
+
+HELLOMESSAGE . . . . . . . . . .  	L BYTE	0000	DATAS
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  main		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     25 Source  Lines
+     25 Total   Lines
+     12 Symbols
+
+  46574 + 443934 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors
