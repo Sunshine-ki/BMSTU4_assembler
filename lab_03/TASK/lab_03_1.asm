@@ -29,7 +29,10 @@ main:
     SUB buffer + 2, 30h
     mov CL, buffer + 2
 
-
+assume  DS:DATA_PRINT
+    mov ax, DATA_PRINT
+    mov ds, ax
+    
 print_a:
     MOV DX, offset sumb
     MOV AH, 09h
