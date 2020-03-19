@@ -10,6 +10,8 @@ USER_DATA SEGMENT PARA PUBLIC 'DATA'
     n             db 1 	; Кол-во строк.
     m             db 1 	; Кол-во столбцов.
     matrix        db 81 DUP (0)
+	              db   '$'               
+
 USER_DATA ENDS
 
 DataS   SEGMENT WORD 'DATA'
@@ -54,12 +56,28 @@ main:
     ; ADD CL, 1
 
     MOV AH, 01h
-FILL_MATRIX:
-	INT 21h	
-	MOV matrix, AL
-	INT 21h	 ; Для пробела.
+	MOV BX, 0h
+INPUT_MATRIX:
+    MOV AH, 0Ah
+    MOV AH, 01h
 
-	LOOP FILL_MATRIX
+	INT 21h	
+	MOV matrix[BX], AL
+	INT 21h	 ; Для пробела.
+	ADD BX, 1h
+	LOOP INPUT_MATRIX
+
+	MOV CL, n
+	MOV BX, 0h
+    MOV AH, 02h
+PRINT_MATRIX:
+	MOV DL, matrix[BX]
+	INT 21h	
+	MOV DL, ' '
+	INT 21h	
+
+	ADD BX, 1h
+	LOOP PRINT_MATRIX
 
 
 	; Завершение программы.
