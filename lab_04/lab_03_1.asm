@@ -6,7 +6,7 @@ SSTK ENDS
 ; Объявляем сегмент, в который запишем данные (цифру)
 ; Которую введет пользователь
 USER_DATA SEGMENT PARA PUBLIC 'DATA'
-	index		  db 1
+	index 		  db 1
     n             db 1 	; Кол-во строк.
     m             db 1 	; Кол-во столбцов.
     matrix        db 81 DUP (0)
@@ -44,23 +44,22 @@ main:
 	MOV n, AL
 	INT 21h	; Для пробела.
 
-
 	; Считываем кол-во столбцов. 
-	; MOV AH, 01h
-    ; INT 21h	
+	MOV AH, 01h
+    INT 21h	
 
-	; SUB AL, '0'
-	; MOV m, AL
+    SUB AL, '0'
+	MOV m, AL
+	INT 21h	; Для enter (\n).
 
 	MOV CL, n
-    ; ADD CL, 1
+	ADD CL, m
+	ADD CL, 1
 
     MOV AH, 01h
 	MOV BX, 0h
 INPUT_MATRIX:
-    MOV AH, 0Ah
     MOV AH, 01h
-
 	INT 21h	
 	MOV matrix[BX], AL
 	INT 21h	 ; Для пробела.
@@ -68,8 +67,12 @@ INPUT_MATRIX:
 	LOOP INPUT_MATRIX
 
 	MOV CL, n
+	ADD CL, m
+	ADD CL, 1
 	MOV BX, 0h
     MOV AH, 02h
+
+	mov index, m
 PRINT_MATRIX:
 	MOV DL, matrix[BX]
 	INT 21h	
