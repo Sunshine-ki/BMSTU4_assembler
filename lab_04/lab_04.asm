@@ -164,11 +164,7 @@ NEXT2:
 
 	MOV CL, i
 	LOOP FILL_ARRAY
-	
 
-	; TASK
-	CALL MULTIPLICATION_N_M ; Перемножает n*m и записывает в CX.
-	MOV BX, 0h
 
 ; print_array
 	MOV CX, 0
@@ -182,23 +178,35 @@ PRINT_ARRAY:
 	INT 21h	
 	INC BX
 	LOOP PRINT_ARRAY
-; TASK:
-; 	MOV AX, BX
-; 	DIV m 
-; 	CMP matrix[BX], '#'
-; 	JNE SKIP 
-; 	; Если равно '#'
-; 	MOV AH, 02h
-; 	MOV DL, matrix[BX]
-; 	INT 21h	
-; 	MOV DL, ' '
-; 	INT 21h	
-	
 
-; SKIP: 
-; 	ADD BX, 1h
-; 	LOOP TASK
+
+	; TASK
+	CALL MULTIPLICATION_N_M ; Перемножает n*m и записывает в CX.
+	MOV BX, 0h
+TASK:
+	MOV AX, BX
+	DIV m 
+	CMP matrix[BX], '#'
+	JNE SKIP 
+	; Если равно '#'
+	MOV AX, BX
+	DIV m
+
+	XCHG AL, AH
+	MOV AH, 0
+	MOV SI, AX
+	MOV AL, array[SI]
+	MOV matrix[BX], AL
+	; MOV AH, 02h
+	; MOV DL, matrix[BX]
+	; INT 21h	
+	; MOV DL, ' '
+	; INT 21h	
+SKIP: 
+	ADD BX, 1h
+	LOOP TASK
 	
+	CALL PRINT_MATRIX
 
 	; Завершение программы.
 	CALL EXIT
