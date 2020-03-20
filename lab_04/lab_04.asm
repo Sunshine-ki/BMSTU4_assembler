@@ -5,13 +5,15 @@ SSTK ENDS
 
 ; Объявляем сегмент, в который запишем данные (цифру)
 ; Которую введет пользователь
-USER_DATA SEGMENT PARA PUBLIC 'DATA'
-	index 		  db 1
+DATA SEGMENT PARA PUBLIC 'DATA'
 	n			  db 1 	; Кол-во строк.
 	m			  db 1 	; Кол-во столбцов.
 	matrix		  db 81 DUP (0)
-				  db   '$'			   
-USER_DATA ENDS
+				  db   '$'
+	i 		  db 1
+	j	 		  db 1
+	array		  db 9 DUP (0) ; Массив, в котором будет сумма цифр столбцов.			   
+DATA ENDS
 
 DataS   SEGMENT WORD 'DATA'
 Message			DB   'input n and m: '  
@@ -24,7 +26,7 @@ SC1 SEGMENT para public 'CODE'
 	assume CS:SC1, DS:DataS
 
 MULTIPLICATION_N_M:
-	assume DS:USER_DATA
+	assume DS:DATA
 	MOV AX, 0h
 	MOV CX, 0h
 	MOV AL, m
@@ -52,7 +54,7 @@ INPUT_NUMERAL:
 	RET
 
 PRINT_MATRIX:
-	call MULTIPLICATION_N_M ; Перемножает n*m и записывает в CX.
+	CALL MULTIPLICATION_N_M ; Перемножает n*m и записывает в CX.
 	MOV BX, 0h
 
 PRINT:
@@ -90,9 +92,9 @@ main:
 	mov   AH,9					 
 	int   21h  
 
-	assume DS:USER_DATA
+	assume DS:DATA
 
-	mov AX, USER_DATA
+	mov AX, DATA
 	mov DS, AX
 
 	; Считываем кол-во строк. 
@@ -110,29 +112,53 @@ main:
 	CALL INPUT_MATRIX
 
 	; MOV AH, m
-	; mov index, AH
+	; mov i, AH
 
 
-	; TASK
-	call MULTIPLICATION_N_M ; Перемножает n*m и записывает в CX.
-	MOV BX, 0h
+	; FILL_ARRAY
+	; CALL MULTIPLICATION_N_M ; Перемножает n*m и записывает в CX.
+	; MOV BX, 0h ; Индексная 
+	MOV CX, 0h
+	MOV BX, 0H
+	MOV CL, n
+	MOV j, CL
+	MOV CL, m
+FILL_ARRAY:
+	MOV i, CL
 
-TASK:
-	MOV AX, BX
-	DIV m 
-	CMP matrix[BX], '#'
-	JNE SKIP 
-	; Если равно '#'
+
+	MOV CL, j
+INNER_LOOP:
 	MOV AH, 02h
 	MOV DL, matrix[BX]
-	INT 21h	
-	MOV DL, ' '
-	INT 21h	
+	INT 21h
+	INC BX
+	LOOP INNER_LOOP
+
+	MOV CL, i
+	LOOP FILL_ARRAY
 	
 
-SKIP: 
-	ADD BX, 1h
-	LOOP TASK
+	; TASK
+	CALL MULTIPLICATION_N_M ; Перемножает n*m и записывает в CX.
+	MOV BX, 0h
+
+; TASK:
+; 	MOV AX, BX
+; 	DIV m 
+; 	CMP matrix[BX], '#'
+; 	JNE SKIP 
+; 	; Если равно '#'
+; 	MOV AH, 02h
+; 	MOV DL, matrix[BX]
+; 	INT 21h	
+; 	MOV DL, ' '
+; 	INT 21h	
+	
+
+; SKIP: 
+; 	ADD BX, 1h
+; 	LOOP TASK
 	
 
 	; Завершение программы.
