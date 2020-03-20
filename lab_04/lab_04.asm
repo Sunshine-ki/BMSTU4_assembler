@@ -10,10 +10,11 @@ DATA SEGMENT PARA PUBLIC 'DATA'
 	m			  db 1 	; Кол-во столбцов.
 	matrix		  db 81 DUP (0)
 				  db   '$'
+	flag		  db 1
 	i 		 	  db 1
 	j	 		  db 1
 	sum			  db 1
-	array		  db 9 DUP (0) ; Массив, в котором будет сумма цифр столбцов.			   
+	array		  db 9 DUP ('#') ; Массив, в котором будет сумма цифр столбцов.			   
 DATA ENDS
 
 DataS   SEGMENT WORD 'DATA'
@@ -58,6 +59,12 @@ PRINT_MATRIX:
 	CALL MULTIPLICATION_N_M ; Перемножает n*m и записывает в CX.
 	MOV BX, 0h
 
+	MOV AH, 02h
+	MOV DL, 10 ; Возврат картеки.
+	INT 21h	
+	MOV DL, 13 ; \n
+	INT 21h	
+	
 PRINT:
 	MOV AX, BX
 	DIV m 
@@ -132,11 +139,14 @@ FILL_ARRAY:
 
 	MOV CL, j
 	MOV SUM, 0h
+	MOV flag, 0
 INNER_LOOP:
 	CMP matrix[BX], '9'
 	JA NEXT2
 	CMP matrix[BX], '0'
 	JB NEXT2
+
+	MOV flag, 1
 
 	MOV AL, matrix[BX]
 	SUB AL, '0'
@@ -154,6 +164,9 @@ NEXT2:
 	; MOV DL, SUM
 	; INT 21h
 
+	CMP flag, 0
+	JE NEXT3
+
 	MOV AX, 0
 	MOV AL, m
 	SUB AL, i
@@ -162,22 +175,23 @@ NEXT2:
 	MOV AH, SUM
 	MOV array[SI], AH
 
+NEXT3:
 	MOV CL, i
 	LOOP FILL_ARRAY
 
 
-; print_array
-	MOV CX, 0
-	MOV BX, 0
-	MOV CL, m
-PRINT_ARRAY:
-	MOV AH, 02h
-	MOV DL, array[BX]
-	INT 21h	
-	MOV DL, ' '
-	INT 21h	
-	INC BX
-	LOOP PRINT_ARRAY
+; ; print_array
+; 	MOV CX, 0
+; 	MOV BX, 0
+; 	MOV CL, m
+; PRINT_ARRAY:
+; 	MOV AH, 02h
+; 	MOV DL, array[BX]
+; 	INT 21h	
+; 	MOV DL, ' '
+; 	INT 21h	
+; 	INC BX
+; 	LOOP PRINT_ARRAY
 
 
 	; TASK
