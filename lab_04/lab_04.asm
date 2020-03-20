@@ -10,8 +10,9 @@ DATA SEGMENT PARA PUBLIC 'DATA'
 	m			  db 1 	; Кол-во столбцов.
 	matrix		  db 81 DUP (0)
 				  db   '$'
-	i 		  db 1
+	i 		 	  db 1
 	j	 		  db 1
+	sum			  db 1
 	array		  db 9 DUP (0) ; Массив, в котором будет сумма цифр столбцов.			   
 DATA ENDS
 
@@ -130,23 +131,25 @@ FILL_ARRAY:
 	SUB BL, i
 
 	MOV CL, j
+	MOV SUM, 0h
 INNER_LOOP:
-	MOV AH, 02h
-	MOV DL, matrix[BX]
-	INT 21h
+	MOV AL, matrix[BX]
+	SUB AL, '0'
+	ADD SUM, AL 
+	CMP SUM, 10 ; Если был перенос (Т.е. сумма больше 9)
+	JL NEXT2
+	SUB SUM, 10
+
+NEXT2:
 	ADD BL, m
 	LOOP INNER_LOOP
 
-	;
 	MOV AH, 02h
-	MOV DL, 10 ; Возврат картеки.
-	INT 21h	
-	MOV DL, 13 ; \n
-	INT 21h	
-	;
+	ADD SUM, '0'
+	MOV DL, SUM
+	INT 21h
 
 	MOV CL, i
-	
 	LOOP FILL_ARRAY
 	
 
