@@ -126,16 +126,27 @@ main:
 FILL_ARRAY:
 	MOV i, CL
 
+	MOV BL, m
+	SUB BL, i
 
 	MOV CL, j
 INNER_LOOP:
 	MOV AH, 02h
 	MOV DL, matrix[BX]
 	INT 21h
-	INC BX
+	ADD BL, m
 	LOOP INNER_LOOP
 
+	;
+	MOV AH, 02h
+	MOV DL, 10 ; Возврат картеки.
+	INT 21h	
+	MOV DL, 13 ; \n
+	INT 21h	
+	;
+
 	MOV CL, i
+	
 	LOOP FILL_ARRAY
 	
 
