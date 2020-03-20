@@ -149,10 +149,18 @@ NEXT2:
 	ADD BL, m
 	LOOP INNER_LOOP
 
-	MOV AH, 02h
+	; MOV AH, 02h
 	ADD SUM, '0'
-	MOV DL, SUM
-	INT 21h
+	; MOV DL, SUM
+	; INT 21h
+
+	MOV AX, 0
+	MOV AL, m
+	SUB AL, i
+	MOV SI, AX
+
+	MOV AH, SUM
+	MOV array[SI], AH
 
 	MOV CL, i
 	LOOP FILL_ARRAY
@@ -162,6 +170,18 @@ NEXT2:
 	CALL MULTIPLICATION_N_M ; Перемножает n*m и записывает в CX.
 	MOV BX, 0h
 
+; print_array
+	MOV CX, 0
+	MOV BX, 0
+	MOV CL, m
+PRINT_ARRAY:
+	MOV AH, 02h
+	MOV DL, array[BX]
+	INT 21h	
+	MOV DL, ' '
+	INT 21h	
+	INC BX
+	LOOP PRINT_ARRAY
 ; TASK:
 ; 	MOV AX, BX
 ; 	DIV m 
