@@ -133,6 +133,11 @@ FILL_ARRAY:
 	MOV CL, j
 	MOV SUM, 0h
 INNER_LOOP:
+	CMP matrix[BX], '9'
+	JA NEXT2
+	CMP matrix[BX], '0'
+	JB NEXT2
+
 	MOV AL, matrix[BX]
 	SUB AL, '0'
 	ADD SUM, AL 
