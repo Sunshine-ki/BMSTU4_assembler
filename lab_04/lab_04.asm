@@ -112,7 +112,28 @@ main:
 	; MOV AH, m
 	; mov index, AH
 
-	CALL PRINT_MATRIX
+
+	; TASK
+	call MULTIPLICATION_N_M ; Перемножает n*m и записывает в CX.
+	MOV BX, 0h
+
+TASK:
+	MOV AX, BX
+	DIV m 
+	CMP matrix[BX], '#'
+	JNE SKIP 
+	; Если равно '#'
+	MOV AH, 02h
+	MOV DL, matrix[BX]
+	INT 21h	
+	MOV DL, ' '
+	INT 21h	
+	
+
+SKIP: 
+	ADD BX, 1h
+	LOOP TASK
+	
 
 	; Завершение программы.
 	CALL EXIT
