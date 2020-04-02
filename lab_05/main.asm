@@ -33,7 +33,16 @@ assume DS:DATA
 	; Если пользователь ввел \n, то:
 	JE main
 
+	CMP AL, '9'
+	JA t1
 	SUB AL, '0'
+	jmp write
+
+t1:
+	SUB AL, 40h
+	ADD AL, 9H 
+
+write:
 	MOV number[BX], AL
 	INC BX
 	LOOP INPUT
