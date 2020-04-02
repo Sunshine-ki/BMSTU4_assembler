@@ -1,3 +1,4 @@
+; В другом модуле записывает в symb 10 и X.
 EXTRN output_X: near
 
 STK SEGMENT PARA STACK 'STACK'
@@ -19,7 +20,7 @@ main:
 	mov ax, 4c00h
 	int 21h
 CSEG ENDS
-
+ 
 PUBLIC X
 
 END main

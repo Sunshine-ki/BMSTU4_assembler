@@ -1,6 +1,10 @@
+; Выводит 
+; y
+; e
+; s.
 SD1 SEGMENT para public 'DATA'
 	S1 db 'Y'
-	db 65535 - 2 dup (0)
+	db 65535 - 2 dup (0) ; FFFD
 SD1 ENDS
 
 SD2 SEGMENT para public 'DATA'
@@ -15,6 +19,7 @@ SD3 ENDS
 
 CSEG SEGMENT para public 'CODE'
 	assume CS:CSEG, DS:SD1
+; Выводит то, что лежит в dl и перенос + перемещение каретки (Как \n).
 output:
 	mov ah, 2
 	int 21h

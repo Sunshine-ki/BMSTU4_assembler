@@ -8,15 +8,15 @@ SD2 ENDS
 SC2 SEGMENT para public 'CODE'
 	assume CS:SC2, DS:SD2
 exit:
-	mov ax, seg X ;Оператор seg возвращает адрес сегмента,
-	;в котором расположена указанная переменная.
+	mov ax, seg X ; Оператор seg возвращает адрес сегмента,
+	; в котором расположена указанная переменная.
 	mov es, ax
 	mov bh, es:X
 
 	mov ax, SD2
 	mov ds, ax
 
-	xchg ah, Y ;Обмен местами.
+	xchg ah, Y ; Обмен местами.
 	xchg ah, ES:X
 	xchg ah, Y	
 

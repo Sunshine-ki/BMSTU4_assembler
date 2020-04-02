@@ -1,5 +1,7 @@
-PUBLIC X
-EXTRN exit: far
+; Меняет местами x и y. Потом выводит y, но выводится x.
+; Выводит X. 
+PUBLIC X ; X - виден в других файлах.
+EXTRN exit: far ; Вид перехода - far (Где-то есть exit (метка))
 
 SSTK SEGMENT para STACK 'STACK'
 	db 100 dup(0)
