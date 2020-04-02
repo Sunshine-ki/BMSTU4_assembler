@@ -33,6 +33,7 @@ assume DS:DATA
 	; Если пользователь ввел \n, то:
 	JE main
 
+	SUB AL, '0'
 	MOV number[BX], AL
 	INC BX
 	LOOP INPUT
@@ -48,6 +49,7 @@ assume DS:DATA
 	MOV AH, 02h
 	MOV CX, 4 
 	MOV BX, 0h
+	MOV SI, 0h
 
 	; Выводим \n.
 	MOV DL, 10
@@ -56,14 +58,41 @@ assume DS:DATA
 	INT 21h
 
 OUTPUT_B:	
-	CMP number[BX], '$'  
-	; Если number[BX] == $ (Спец. символу). то:
+	CMP number[SI], '$'  
+	; Если number[SI] == $ (Спец. символу). то:
 	JE main
 
-	MOV DL, number[BX]
+	; MOV DL, number[SI]
+	; INT 21h
+
+
+
+	MOV BH, number[SI]
+
+	SHL BH, 1
+	SHL BH, 1
+	SHL BH, 1
+	SHL BH, 1
+	MOV CX, 4
+next_b:
+	shl BH, 1
+	jc one; Если был перенос
+	MOV DL, '0'
+	jmp print
+
+one:
+	MOV DL, '1'
+
+print:
+	MOV AH, 02h
 	INT 21h
-	INC BX
-	LOOP OUTPUT_B	 
+	cmp BH, 0
+	LOOP next_b
+
+
+
+	INC SI
+	JMP OUTPUT_B	 
 
 	RET
 SC1 ENDS
