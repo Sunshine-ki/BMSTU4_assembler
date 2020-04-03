@@ -110,57 +110,90 @@ SC1 SEGMENT para public 'CODE'
 	; assume CS:SC2, DS:DataMessage
 OUTPUT_OCTAL_NUMBER:
 assume DS:DATA
-	MOV AH, 02h
 	MOV CX, 4 
-	MOV BX, 0h
-	MOV SI, 0h
+	XOR BX, BX
+	XOR SI, SI
 
 	; Выводим \n.
+	MOV AH, 02h
 	MOV DL, 10
 	INT 21h
 	MOV DL, 13
 	INT 21h
 
-OUTPUT_O:	
+    xor     ax, ax
+
 	CMP number[SI], '$'  
 	; Если number[SI] == $ (Спец. символу). то:
 	JE main
 
-
-
-	MOV BH, number[SI]
-
-	SHL BH, 1
-	SHL BH, 1
-	SHL BH, 1
-	SHL BH, 1
-	MOV CX, 4
-
-	shl BH, 1
-	jc one1; Если был перенос
-	MOV DL, '0'
-	jmp print1
-
-one1:
-	MOV DL, '1'
-
-print1:
-	MOV AH, 02h
-	INT 21h
-
-	shr BH, 1
-
-	SHR BH, 1
-	SHR BH, 1
-	SHR BH, 1
-	SHR BH, 1
-
-	ADD BH, '0'
-	MOV DL, BH
-	INT 21h
-
+	MOV AL, number[SI]
 	INC SI
-	JMP OUTPUT_O	 
+	CMP number[SI], '$'  
+	JE naxt1
+	SHL AL, 1
+	SHL AL, 1
+	SHL AL, 1
+	SHL AL, 1
+	ADD AL, number[SI]
+	
+	INC SI
+	CMP number[SI], '$'  
+	JE naxt1
+	SHL AX, 1
+	SHL AX, 1
+	SHL AX, 1
+	SHL AX, 1	
+	ADD AL, number[SI]
+		
+	INC SI
+	CMP number[SI], '$'  
+	JE naxt1
+	SHL AX, 1
+	SHL AX, 1
+	SHL AX, 1
+	SHL AX, 1	
+	ADD AL, number[SI]
+
+
+
+	; MOV AL, number[SI]
+	; SHL AL, 1
+	; SHL AL, 1
+	; SHL AL, 1
+	; SHL AL, 1
+	; INC SI
+	; CMP number[SI], '$'  
+	; JE naxt1
+	; ADD AL, number[SI]
+	
+
+naxt1:
+
+    xor     cx, cx
+    mov     bx, 8 ; основание сс. 10 для десятеричной и т.п.
+oi2:
+    xor     dx,dx
+    div     bx
+; Делим число на основание сс. В остатке получается последняя цифра.
+; Сразу выводить её нельзя, поэтому сохраним её в стэке.
+    push    dx
+    inc     cx
+; А с частным повторяем то же самое, отделяя от него очередную
+; цифру справа, пока не останется ноль, что значит, что дальше
+; слева только нули.
+    test    ax, ax
+    jnz     oi2
+; Теперь приступим к выводу.
+    mov     ah, 02h
+oi3:
+    pop     dx
+
+    add     dl, '0'
+    int     21h
+; Повторим ровно столько раз, сколько цифр насчитали.
+    loop    oi3
+
 
 	RET
 SC1 ENDS
@@ -171,9 +204,7 @@ SSTK SEGMENT para STACK 'STACK'
 SSTK ENDS
 
 DATA SEGMENT PARA PUBLIC 'DATA'
-	number DB 15, 15,15,15;5 DUP ('$') 
-
-	; number DB 6 DUP ('$') ; Т.к. масимальное число это FFFF.
+	number DB 6 DUP ('$') ; Т.к. масимальное число это FFFF.
 	array  DW  exit, INPUT_NUMBER, OUTPUT_BINARY_NUMBER, OUTPUT_OCTAL_NUMBER 	
 DATA ENDS
 
