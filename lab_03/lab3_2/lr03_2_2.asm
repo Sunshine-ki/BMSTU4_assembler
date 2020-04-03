@@ -1,6 +1,6 @@
 SD1 SEGMENT para common 'DATA'
 	C1 LABEL byte
-	ORG 1h
+	ORG 1h ; смещает одресацию на 1 байт.
 	C2 LABEL byte
 SD1 ENDS
 

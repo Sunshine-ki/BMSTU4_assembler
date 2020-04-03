@@ -109,10 +109,60 @@ SC1 ENDS
 SC1 SEGMENT para public 'CODE'
 	; assume CS:SC2, DS:DataMessage
 OUTPUT_OCTAL_NUMBER:
-	mov   AX, 3			 
+assume DS:DATA
+	MOV AH, 02h
+	MOV CX, 4 
+	MOV BX, 0h
+	MOV SI, 0h
+
+	; Выводим \n.
+	MOV DL, 10
+	INT 21h
+	MOV DL, 13
+	INT 21h
+
+OUTPUT_O:	
+	CMP number[SI], '$'  
+	; Если number[SI] == $ (Спец. символу). то:
+	JE main
+
+
+
+	MOV BH, number[SI]
+
+	SHL BH, 1
+	SHL BH, 1
+	SHL BH, 1
+	SHL BH, 1
+	MOV CX, 4
+
+	shl BH, 1
+	jc one1; Если был перенос
+	MOV DL, '0'
+	jmp print1
+
+one1:
+	MOV DL, '1'
+
+print1:
+	MOV AH, 02h
+	INT 21h
+
+	shr BH, 1
+
+	SHR BH, 1
+	SHR BH, 1
+	SHR BH, 1
+	SHR BH, 1
+
+	ADD BH, '0'
+	MOV DL, BH
+	INT 21h
+
+	INC SI
+	JMP OUTPUT_O	 
 
 	RET
-
 SC1 ENDS
 
 ; Объявляем сегмент со смещением, кратному параграфу (16 байт) для стека.
@@ -121,7 +171,9 @@ SSTK SEGMENT para STACK 'STACK'
 SSTK ENDS
 
 DATA SEGMENT PARA PUBLIC 'DATA'
-	number DB 6 DUP ('$') ; Т.к. масимальное число это FFFF.
+	number DB 15, 15,15,15;5 DUP ('$') 
+
+	; number DB 6 DUP ('$') ; Т.к. масимальное число это FFFF.
 	array  DW  exit, INPUT_NUMBER, OUTPUT_BINARY_NUMBER, OUTPUT_OCTAL_NUMBER 	
 DATA ENDS
 
