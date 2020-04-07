@@ -11,10 +11,10 @@ EXTRN OUTPUT_OCTAL_NUMBER: near
 SD1   SEGMENT para public 'DATA'
 Message_menu	DB    10, 13, 5 DUP (' '), 'Menu: ', 10, 13
 				DB   '1. Input number.' , 10, 13
-				DB   '2. Number output in 2 number system.', 10, 13   
-				DB   '3. Number output in 8 number system.', 10, 13  
-				DB   '0. EXIT.', 10, 13, 10  
-				DB	 'Select an action: '
+				DB   '2. Print 2 unsigned.', 10, 13   
+				DB   '3. Print 8 signed.', 10, 13  
+				DB   '0. Exit.', 10, 13, 10  
+				DB	 'Select action: '
 				DB   '$'	
 Message_error	DB 	  10, 13, 'Input Error!', 10, 13, '$'
 Message_input	DB	  10, 13, 'Input number: ', '$'		
