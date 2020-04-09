@@ -1,4 +1,5 @@
 PUBLIC EXIT
+
 EXTRN Message_menu:byte, Message_error:byte
 EXTRN array: word
 
@@ -9,7 +10,7 @@ input_error:
 	MOV DS, AX
 	
 	MOV DX, OFFSET DS:Message_error
-	MOV AH, 9					 
+	MOV AH, 9			 
 	INT 21h  
 
 main:
@@ -45,7 +46,9 @@ main:
 
 	; AX - результат умножения.
 	MOV SI, AX
-	MOV AX,  DS:array[SI]	 
+	MOV AX,  DS:array[SI] 
+	
+	; CALL DS:array[SI] 
 	
 	CALL AX
 	JMP main

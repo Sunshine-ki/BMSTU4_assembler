@@ -1,4 +1,5 @@
 ; В другом модуле записывает в symb 10 и X.
+; Выводит на экран зеленую R
 EXTRN output_X: near
 
 STK SEGMENT PARA STACK 'STACK'

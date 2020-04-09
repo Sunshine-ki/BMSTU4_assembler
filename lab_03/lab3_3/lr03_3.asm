@@ -33,16 +33,30 @@ main:
 	mov ds, ax
 	mov dl, S1
 	call output
-assume DS:SD2
-	mov ax, SD2
-	mov ds, ax
-	mov dl, S2
+
+	MOV ax, seg s2
+	mov es, ax
+	mov dl, es:s2
 	call output
-assume DS:SD3
-	mov ax, SD3
-	mov ds, ax
-	mov dl, S3
+
+	MOV ax, seg s3
+	mov es, ax
+	mov dl, es:s3
 	call output
+
+
+
+
+;; assume DS:SD2
+	; mov ax, SD2
+; 	mov ds, ax
+; 	mov dl, S2
+; 	call output
+; ; assume DS:SD3
+; 	mov ax, SD3
+; 	mov ds, ax
+; 	mov dl, S3
+; 	call output
 	
 	mov ax, 4c00h
 	int 21h
