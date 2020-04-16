@@ -27,11 +27,18 @@ output:
 	int 21h
 	mov dl, 10
 	int 21h
-	ret
+	retn 4
 main:
 	mov ax, SD1
 	mov ds, ax
 	mov dl, S1
+
+	PUSH AX
+	PUSH BX
+	POP CX
+	CALL output
+	; RETN 8
+
 	call output
 
 	MOV ax, seg s2
