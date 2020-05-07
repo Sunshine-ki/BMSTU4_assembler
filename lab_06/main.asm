@@ -21,6 +21,9 @@ main:
 
 
 s:
+	mov ax, 0b800h
+	mov es, ax
+
 	; Время.
     mov ah, 02h
     int 1Ah
@@ -33,13 +36,13 @@ s:
 	mov al, 15 ; 1111
 	and al, dl
 	add al, '0'
-	mov symb + 2, ax
+	mov es:[008Eh], ax
 	mov al, 240 ; 1111 0000
 	and al, dl
 	MOV CL, 4
 	SHR AL, CL
 	add al, '0'
-	mov symb, ax
+	mov es:[008Eh] - 2, ax
 
 JMP s
 
