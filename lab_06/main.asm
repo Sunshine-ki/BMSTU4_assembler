@@ -19,6 +19,7 @@ main:
 	mov ax, DS2
 	mov es, ax
 
+	color byte 11 ; Голубой.
 
 s:
 	mov ax, 0b800h
@@ -28,7 +29,23 @@ s:
     mov ah, 02h
     int 1Ah
 	
-	mov ah, 11 ; Голубой цвет.
+	mov ah, color ; Голубой цвет.
+
+
+    mov color, ah
+    mov bh, 15      ; 1111
+    and bh, ah      ; Получаем цвет текста.
+    cmp bh, 15      ; Сравниваем с 1111 (максимальный код цвета текста).
+    jne increment   ; Если не равен, то прибавляем единицу.
+    ; reset
+    ; Если равен, то сбрасываем (делам 0000)
+    and ah, 240     ; 1111 0000 
+
+
+
+increment:
+    add ah, 1
+
 
 	; Вывод секунд
 	MOV CL, 8
