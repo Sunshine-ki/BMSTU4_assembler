@@ -13,6 +13,8 @@
 #define MAX_LEN "1000"
 #define ENDL "\n\t"
 
+extern void copy(char *, char *, int);
+
 // Ассемблерные вставки используются для «насильственного»
 // размещения в Си-программах ассемблерного
 // кода, явно заданного программистом.
@@ -68,11 +70,20 @@ char *create_string(char *str)
 
 int main(int argc, char *argv[])
 {
-	char *string = create_string(argv[1]);
+	size_t len = 0;
+	char *string_user = create_string(argv[1]);
+	char *string_result = create_string(argv[1]);
 
-	strcpy(string, argv[1]);
+	strcpy(string_user, argv[1]);
 
-	printf("strlen:\nC: %ld\nMy: %ld\n", strlen(string), my_asm_strlen(string));
+	len = my_asm_strlen(string_user);
 
-	free(string);
+	printf("strlen:\nC: %ld\nMy: %ld\n", strlen(string_user), len);
+
+	copy(string_result, string_user, len);
+
+	printf("Copy: %s\n", string_result);
+
+	free(string_user);
+	free(string_result);
 }
