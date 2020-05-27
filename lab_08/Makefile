@@ -1,4 +1,4 @@
-FLAGS :=  -masm=intel 
+FLAGS :=  -masm=intel -g
 
 a.out: main.c
 	gcc $(FLAGS) main.c
