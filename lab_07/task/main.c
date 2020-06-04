@@ -87,4 +87,16 @@ int main(int argc, char *argv[])
 
 	free(string_user);
 	free(string_result);
+
+	char string[20] = "123456";
+	len = strlen(string);
+	printf("string = %s", string);
+	copy(string, string + 3, 3);
+	printf("\nstring = %s\n", string);
+
+	char string_reverse[20] = "123456";
+	len = strlen(string_reverse);
+	printf("string_reverse = %s", string_reverse);
+	copy(string_reverse + len, string_reverse, len);
+	printf("\nstring_reverse = %s\n", string_reverse);
 }
